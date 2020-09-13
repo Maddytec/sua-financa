@@ -6,5 +6,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'sua-financa';
+
+  public opened: boolean = false;
+
+  public toggleSidebar() {
+    this.opened = !this.opened;
+  }
 }
