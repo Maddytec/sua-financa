@@ -16,7 +16,7 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
   categoryForm: FormGroup;
   pageTitle: string;
   serverErrorMessages: string[] = null;
-  subimittingForm: boolean = false;
+  submittingForm: Boolean = false;
   category: Category = new Category();
 
   constructor(
@@ -35,6 +35,18 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
   ngAfterContentChecked() {
     this.setPageTitle();
   }
+
+  submitForm() {
+    this.submittingForm = true;
+    if (this.currentAction == "new") {
+      this.createCategory();
+    } else {
+      this.updateCategory();
+    }
+  }
+
+
+
 
   private setPageTitle() {
     if (this.currentAction == "new") {
@@ -76,4 +88,44 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  public createCategory() {
+    const category: Category = Object.assign(new Category, this.categoryForm.value);
+
+    this.categoryService.create(category)
+      .subscribe(
+        category => this.actionsForSuccess(category),
+        error => this.actionsForError(error)
+      )
+  }
+
+  public updateCategory() {
+    const category: Category = Object.assign(new Category, this.categoryForm.value);
+
+    this.categoryService.update(category)
+    .subscribe(
+      category => this.actionsForSuccess(category),
+      error => this.actionsForError(error)
+    )
+  }
+
+  private actionsForSuccess(category: Category): void {
+   // toastr.success("Categoria cadastrada com sucesso!");
+
+    this.router.navigateByUrl("categories", {skipLocationChange: true}).then(
+      () => this.router.navigate(["categories", category.id, "edit"])
+    )
+  }
+
+  private actionsForError(error: any): void {
+  //  toastr.error("Ocorreu erro ao processar a sua solicitação!");
+
+    this.submittingForm = false;
+
+    if(error.status === 422){
+      this.serverErrorMessages = JSON.parse(error._body).errors;
+    } else {
+      this.serverErrorMessages = ["Falha na comunicação com o servidor. Por favor tente mais tarde."]
+    }
+    
+  }
 }
