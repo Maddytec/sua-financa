@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^10.1.1",
+    "@angular/animations": "^10.1.4",
     "@angular/cdk": "^10.2.0",
     "@angular/common": "~10.1.0-next.5",
     "@angular/compiler": "~10.1.0-next.5",
@@ -31,7 +31,7 @@
     "moment": "^2.27.0",
     "ng-router-loader": "^2.1.0",
     "ng-sidebar": "^9.4.2",
-    "ngx-toastr": "^13.0.0",
+    "ngx-toastr": "^13.0.1",
     "popper.js": "^1.16.1",
     "primeicons": "^4.0.0",
     "primeng": "^10.0.0",

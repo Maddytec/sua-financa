@@ -1,6 +1,7 @@
 import { AfterContentChecked, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs/operators';
 import { Category } from '../shared/category.model';
 import { CategoryService } from '../shared/category.service';
@@ -17,12 +18,14 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
   pageTitle: string;
   serverErrorMessages: string[] = null;
   submittingForm: Boolean = false;
+  isCreateCategoria: Boolean = false;
   category: Category = new Category();
 
   constructor(
     private categoryService: CategoryService,
     private route: ActivatedRoute,
     private router: Router,
+    private toastr: ToastrService,
     private formBuilder: FormBuilder
   ) { }
 
@@ -44,9 +47,6 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
       this.updateCategory();
     }
   }
-
-
-
 
   private setPageTitle() {
     if (this.currentAction == "new") {
@@ -89,6 +89,7 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
   }
 
   public createCategory() {
+    this.isCreateCategoria = true;
     const category: Category = Object.assign(new Category, this.categoryForm.value);
 
     this.categoryService.create(category)
@@ -99,6 +100,7 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
   }
 
   public updateCategory() {
+    this.isCreateCategoria = false;
     const category: Category = Object.assign(new Category, this.categoryForm.value);
 
     this.categoryService.update(category)
@@ -109,7 +111,12 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
   }
 
   private actionsForSuccess(category: Category): void {
-   // toastr.success("Categoria cadastrada com sucesso!");
+
+    if(this.isCreateCategoria){
+      this.toastr.success("Categoria cadastrada com sucesso!");
+    } else {
+      this.toastr.success("Categoria atualizada com sucesso!");
+    }
 
     this.router.navigateByUrl("categories", {skipLocationChange: true}).then(
       () => this.router.navigate(["categories", category.id, "edit"])
@@ -117,7 +124,7 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
   }
 
   private actionsForError(error: any): void {
-  //  toastr.error("Ocorreu erro ao processar a sua solicitação!");
+    this.toastr.error("Ocorreu erro ao processar a sua solicitação!");
 
     this.submittingForm = false;
 
@@ -126,6 +133,6 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     } else {
       this.serverErrorMessages = ["Falha na comunicação com o servidor. Por favor tente mais tarde."]
     }
-    
+
   }
 }

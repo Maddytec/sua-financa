@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { element } from 'protractor';
 import { Category } from '../shared/category.model';
 import { CategoryService } from '../shared/category.service';
@@ -12,7 +13,10 @@ export class CategoryListComponent implements OnInit {
 
   categories: Category[] = [];
 
-  constructor(private categoryService: CategoryService) { }
+  constructor(
+    private categoryService: CategoryService,
+    private toastr: ToastrService
+    ) { }
 
   ngOnInit(): void {
     this.categoryService.getAll().subscribe(
@@ -29,6 +33,7 @@ export class CategoryListComponent implements OnInit {
         () => this.categories = this.categories.filter(element => element != category),
         () => alert("Erro ao excluir a categoria!")
       )
+      this.toastr.info("Categoria excluida!")
     }
   }
 
