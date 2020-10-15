@@ -49,10 +49,28 @@
             <div *ngIf="entryForm.get('name').errors.minlength">Mínimo dois caracteres</div>
           </div>
         </div>
+
+        <!-- amount  -->
+        <div class="form-group col-md-3">
+          <label for="amount">Valor</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">R$</div>
+            </div>
+            <input [imask]="imaskConfig" type="text" class="form-control text-right" id="amount" formControlName="amount"/>
+          </div>
+
+          <div
+            class="text-danger"
+            *ngIf="entryForm.get('amount').invalid && entryForm.get('amount').touched">
+            <div *ngIf="entryForm.get('amount').errors.required">Campo obrigatórios</div>
+          </div>
+        </div>
+
+
       </div>
 
       <div class="form-row">
-
         <!-- description -->
         <div class="form-group col-md-8">
           <label for="description">Descrição</label>
