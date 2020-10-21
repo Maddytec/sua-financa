@@ -9,7 +9,8 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
 
   constructor(
     protected apiPath: string,
-    protected injector: Injector
+    protected injector: Injector,
+    protected jsonDataToResourceFuncao: (jsonData: any) => T
     ){
       this.http = injector.get(HttpClient);
   }
@@ -44,8 +45,8 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
     )
   }
 
-  delete(t: T): Observable<any> {
-    const url = `${this.apiPath}/${t.id}`;
+  delete(resource: T): Observable<any> {
+    const url = `${this.apiPath}/${resource.id}`;
     return this.http.delete(url).pipe(
       catchError(this.handleError),
       map(() => null)

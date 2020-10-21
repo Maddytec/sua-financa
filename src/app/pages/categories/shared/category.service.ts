@@ -9,6 +9,6 @@ const apiPath = "api/categories";
 export class CategoryService extends BaseResourceService<Category> {
 
   constructor(protected injector: Injector) {
-    super(apiPath, injector)
+    super(apiPath, injector, Category.fromJson)
   }
 }
