@@ -17,50 +17,52 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
 
   getAll(): Observable<T[]> {
     return this.http.get(this.apiPath).pipe(
-      catchError(this.handleError),
-      map(this.jsonDataToResources)
+      map( (jsonData: Array<any>) => this.jsonDataToResources(jsonData)),
+      catchError(this.handleError)
     )
   }
 
   getById(id: number): Observable<T> {
     const url = `${this.apiPath}/${id}`;
     return this.http.get(url).pipe(
-     catchError(this.handleError),
-     map(this.jsonDataToResource)
+      map(this.jsonDataToResource),
+      catchError(this.handleError)
     )
   }
 
   create(resource: T): Observable<T> {
     return this.http.post(this.apiPath, resource).pipe(
-      catchError(this.handleError),
-      map(this.jsonDataToResource)
+      map(this.jsonDataToResource),
+      catchError(this.handleError)
     )
   }
 
   update(resource: T): Observable<T> {
     const url = `${this.apiPath}/${resource.id}`;
     return this.http.put(url, resource).pipe(
-      catchError(this.handleError),
-      map(() => resource)
+      map(() => resource),
+      catchError(this.handleError)
     )
   }
 
   delete(resource: T): Observable<any> {
     const url = `${this.apiPath}/${resource.id}`;
     return this.http.delete(url).pipe(
-      catchError(this.handleError),
-      map(() => null)
+      map(() => null),
+      catchError(this.handleError)
     );
   }
 
   protected jsonDataToResources(jsonData: any[]): T[] {
     const resources: T[] = [];
-    jsonData.forEach(element => resources.push(element as T));
+    jsonData.forEach(
+      element => resources.push( this.jsonDataToResourceFuncao(element) )
+      );
     return resources;
   }
 
   protected jsonDataToResource(jsonData: any): T {
-    return jsonData as T;
+    return this.jsonDataToResourceFuncao(jsonData);
   }
 
   protected handleError(error: any): Observable<any> {

@@ -36,18 +36,4 @@ export class EntryService extends BaseResourceService<Entry> {
     );
   }
 
-  protected jsonDataToResources(jsonData: any[]): Entry[] {
-    const entries: Entry[] = [];
-
-    jsonData.forEach(element => {
-      const entry = Entry.fromJson(element);
-      entries.push(entry);
-    });
-    return entries;
-  }
-
-  protected jsonDataToResource(jsonData: any): Entry {
-    return Entry.fromJson(jsonData);
-  }
-
 }
