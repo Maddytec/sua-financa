@@ -17,7 +17,7 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
 
   getAll(): Observable<T[]> {
     return this.http.get(this.apiPath).pipe(
-      map( (jsonData: Array<any>) => this.jsonDataToResources(jsonData)),
+      map( this.jsonDataToResources.bind(this)),
       catchError(this.handleError)
     )
   }
@@ -25,14 +25,14 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
   getById(id: number): Observable<T> {
     const url = `${this.apiPath}/${id}`;
     return this.http.get(url).pipe(
-      map(this.jsonDataToResource),
+      map(this.jsonDataToResource.bind(this)),
       catchError(this.handleError)
     )
   }
 
   create(resource: T): Observable<T> {
     return this.http.post(this.apiPath, resource).pipe(
-      map(this.jsonDataToResource),
+      map(this.jsonDataToResource.bind(this)),
       catchError(this.handleError)
     )
   }
