@@ -33,6 +33,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
 
   ngOnInit(): void {
     this.setCurrentAction();
+    this.buildResourceForm();
     this.loadResource();
   }
 
@@ -43,7 +44,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
   submitForm() {
     this.submittingForm = true;
     if (this.currentAction == "new") {
-      this.resourceCategory();
+      this.createResource();
     } else {
       this.updateResource();
     }
@@ -51,11 +52,18 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
 
   protected setPageTitle() {
     if (this.currentAction == "new") {
-      this.pageTitle = "Cadastro de Nova Categoria";
+      this.pageTitle = this.creationPageTitle();
     } else {
-      const categoryName = this.category.name || "";
-      this.pageTitle = "Editando Categoria: " + categoryName;
+      this.pageTitle = this.editionPageTitle();
     }
+  }
+
+  protected creationPageTitle(): string {
+    return "Novo";
+  }
+
+  protected editionPageTitle(): string {
+    return "Edição";
   }
 
   protected setCurrentAction() {
@@ -83,36 +91,38 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
 
   public createResource() {
     this.isCreateResource = true;
-    const category: Category = Object.assign(new Category, this.categoryForm.value);
+    const resource: T = this.jsonDataToResourceFuncao(this.resourceForm.value);
 
-    this.categoryService.create(category)
+    this.resourceService.create(resource)
       .subscribe(
-        category => this.actionsForSuccess(category),
+        resource => this.actionsForSuccess(resource),
         error => this.actionsForError(error)
       )
   }
 
-  public updateCategory() {
-    this.isCreateCategoria = false;
-    const category: Category = Object.assign(new Category, this.categoryForm.value);
+  public updateResource() {
+    this.isCreateResource = false;
+    const resource: T = this.jsonDataToResourceFuncao(this.resourceForm.value);
 
-    this.categoryService.update(category)
+    this.resourceService.update(resource)
     .subscribe(
-      category => this.actionsForSuccess(category),
+      resource => this.actionsForSuccess(resource),
       error => this.actionsForError(error)
     )
   }
 
-  protected actionsForSuccess(category: Category): void {
+  protected actionsForSuccess(resouce: T): void {
 
-    if(this.isCreateCategoria){
-      this.toastr.success("Categoria cadastrada com sucesso!");
+    if(this.isCreateResource){
+      this.toastr.success("Cadastrado realizado com sucesso!");
     } else {
-      this.toastr.success("Categoria atualizada com sucesso!");
+      this.toastr.success("Atualização realizada com sucesso!");
     }
 
-    this.router.navigateByUrl("categories", {skipLocationChange: true}).then(
-      () => this.router.navigate(["categories", category.id, "edit"])
+    const baseComponetPath: string = this.route.snapshot.parent.url[0].path;
+
+    this.router.navigateByUrl(baseComponetPath, {skipLocationChange: true}).then(
+      () => this.router.navigate([baseComponetPath, resouce.id, "edit"])
     )
   }
 
@@ -126,6 +136,8 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
     } else {
       this.serverErrorMessages = ["Falha na comunicação com o servidor. Por favor tente mais tarde."]
     }
-
   }
+
+  protected abstract buildResourceForm(): void;
+
 }
