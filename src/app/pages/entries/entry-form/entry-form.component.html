@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<form [formGroup]="entryForm" (submit)="submitForm()">
+<form [formGroup]="resourceForm" (submit)="submitForm()">
   <div class="card ml-2">
     <div class="card-header">Informações sobre o lançamento</div>
 
@@ -29,8 +29,8 @@
           <select name="type" id="type" formControlName="type" class="form-control">
             <option *ngFor="let option of typeOptions" [value]="option.value">{{ option.text }}</option>
           </select>
-          <div class="text-danger" *ngIf="entryForm.get('type').invalid && entryForm.get('type').touched">
-            <div *ngIf="entryForm.get('type').errors.required">Campo obrigatórios</div>
+          <div class="text-danger" *ngIf="resourceForm.get('type').invalid && resourceForm.get('type').touched">
+            <div *ngIf="resourceForm.get('type').errors.required">Campo obrigatórios</div>
           </div>
         </div>
         <!-- name  -->
@@ -43,9 +43,9 @@
             formControlName="name"/>
           <div
             class="text-danger"
-            *ngIf="entryForm.get('name').invalid && entryForm.get('name').touched">
-            <div *ngIf="entryForm.get('name').errors.required">Campo obrigatórios</div>
-            <div *ngIf="entryForm.get('name').errors.minlength">Mínimo dois caracteres</div>
+            *ngIf="resourceForm.get('name').invalid && resourceForm.get('name').touched">
+            <div *ngIf="resourceForm.get('name').errors.required">Campo obrigatórios</div>
+            <div *ngIf="resourceForm.get('name').errors.minlength">Mínimo dois caracteres</div>
           </div>
         </div>
 
@@ -61,8 +61,8 @@
 
           <div
             class="text-danger"
-            *ngIf="entryForm.get('amount').invalid && entryForm.get('amount').touched">
-            <div *ngIf="entryForm.get('amount').errors.required">Campo obrigatórios</div>
+            *ngIf="resourceForm.get('amount').invalid && resourceForm.get('amount').touched">
+            <div *ngIf="resourceForm.get('amount').errors.required">Campo obrigatórios</div>
           </div>
         </div>
 
@@ -80,8 +80,8 @@
           >
           </p-calendar>
 
-          <div class="text-danger" *ngIf="entryForm.get('amount').invalid && entryForm.get('amount').touched">
-            <div *ngIf="entryForm.get('amount').errors.required">Campo obrigatórios</div>
+          <div class="text-danger" *ngIf="resourceForm.get('amount').invalid && resourceForm.get('amount').touched">
+            <div *ngIf="resourceForm.get('amount').errors.required">Campo obrigatórios</div>
           </div>
         </div>
       </div>
@@ -91,15 +91,15 @@
        <div class="form-group col-md-2">
         <label for="paid">Pago</label>
         <div class="btn-group">
-          <label (click)="entryForm.get('paid').setValue(true)" [class.active]="entryForm.get('paid').value == true" class="btn btn-outline-info">
+          <label (click)="resourceForm.get('paid').setValue(true)" [class.active]="resourceForm.get('paid').value == true" class="btn btn-outline-info">
             Pago
           </label>
-          <label (click)="entryForm.get('paid').setValue(false)" [class.active]="entryForm.get('paid').value == false" class="btn btn-outline-info">
+          <label (click)="resourceForm.get('paid').setValue(false)" [class.active]="resourceForm.get('paid').value == false" class="btn btn-outline-info">
             Pendente
           </label>
         </div>
-        <div class="text-danger" *ngIf="entryForm.get('paid').invalid && entryForm.get('paid').touched">
-          <div *ngIf="entryForm.get('amount').errors.required">Campo obrigatórios</div>
+        <div class="text-danger" *ngIf="resourceForm.get('paid').invalid && resourceForm.get('paid').touched">
+          <div *ngIf="resourceForm.get('amount').errors.required">Campo obrigatórios</div>
         </div>
       </div>
 
@@ -109,8 +109,8 @@
         <select name="categoryId" id="categoryId" formControlName="categoryId" class="form-control">
           <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
         </select>
-        <div class="text-danger" *ngIf="entryForm.get('categoryId').invalid && entryForm.get('categoryId').touched">
-          <div *ngIf="entryForm.get('categoryId').errors.required">Campo obrigatórios</div>
+        <div class="text-danger" *ngIf="resourceForm.get('categoryId').invalid && resourceForm.get('categoryId').touched">
+          <div *ngIf="resourceForm.get('categoryId').errors.required">Campo obrigatórios</div>
         </div>
       </div>
 
@@ -135,7 +135,7 @@
     </ul>
   </div>
   <button
-    [disabled]="submittingForm || entryForm.invalid"
+    [disabled]="submittingForm || resourceForm.invalid"
     type="submit"
     class="btn btn-primary btn-lg float-right mt-3"
   >
