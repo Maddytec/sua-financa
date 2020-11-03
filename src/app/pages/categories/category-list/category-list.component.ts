@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { element } from 'protractor';
+import { BaseResourceListComponent } from 'src/app/shared/components/base-resource-list/base-resource-list.componet';
 import { Category } from '../shared/category.model';
 import { CategoryService } from '../shared/category.service';
 
@@ -9,32 +9,21 @@ import { CategoryService } from '../shared/category.service';
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.css']
 })
-export class CategoryListComponent implements OnInit {
-
-  categories: Category[] = [];
+export class CategoryListComponent extends BaseResourceListComponent<Category> {
 
   constructor(
-    private categoryService: CategoryService,
-    private toastr: ToastrService
-    ) { }
-
-  ngOnInit(): void {
-    this.categoryService.getAll().subscribe(
-      categories => this.categories = categories,
-      error => alert('Erro ao carregar categorias')
-    )
-  }
-
-  delete(category) {
-    const mustDelete = confirm(`Categoria ${category.name}, deseja realmente excluir?`)
-
-    if (mustDelete) {
-      this.categoryService.delete(category.id).subscribe(
-        () => this.categories = this.categories.filter(element => element != category),
-        () => alert("Erro ao excluir a categoria!")
-      )
-      this.toastr.info("Categoria excluida!")
+    protected categoryService: CategoryService,
+    protected injector: Injector
+    ) {
+      super(categoryService, injector);
     }
-  }
+
+    protected confirmationDelete(category: Category): string {
+      return `A categoria ${category.name} foi excluída com sucesso!`;
+    }
+
+    protected questionDelete(category: Category): string {
+      return `Deseja realmente excuir a categoria ${category.name}?`;
+    }
 
 }

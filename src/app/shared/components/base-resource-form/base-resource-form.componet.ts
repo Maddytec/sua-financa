@@ -112,7 +112,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
     )
   }
 
-  protected actionsForSuccess(resouce: T): void {
+  protected actionsForSuccess(resource: T): void {
 
     if(this.isCreateResource){
       this.toastr.success("Cadastrado realizado com sucesso!");
@@ -123,7 +123,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
     const baseComponetPath: string = this.route.snapshot.parent.url[0].path;
 
     this.router.navigateByUrl(baseComponetPath, {skipLocationChange: true}).then(
-      () => this.router.navigate([baseComponetPath, resouce.id, "edit"])
+      () => this.router.navigate([baseComponetPath, resource.id, "edit"])
     )
   }
 
