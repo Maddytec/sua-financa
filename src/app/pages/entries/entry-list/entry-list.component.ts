@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
-import { element } from 'protractor';
+import { Component, Injector } from '@angular/core';
+import { BaseResourceListComponent } from 'src/app/shared/components/base-resource-list/base-resource-list.componet';
 import { Entry } from '../shared/entry.model';
 import { EntryService } from '../shared/entry.service';
 
@@ -9,32 +8,21 @@ import { EntryService } from '../shared/entry.service';
   templateUrl: './entry-list.component.html',
   styleUrls: ['./entry-list.component.css']
 })
-export class EntryListComponent implements OnInit {
-
-  entries: Entry[] = [];
+export class EntryListComponent extends BaseResourceListComponent<Entry> {
 
   constructor(
-    private entryService: EntryService,
-    private toastr: ToastrService
-    ) { }
+    protected entryService: EntryService,
+    protected injector: Injector
+    ) {
+      super(entryService, injector);
+    }
 
-  ngOnInit(): void {
-    this.entryService.getAll().subscribe(
-      entries => this.entries = entries.sort((a,b) => b.id - a.id),
-      error => alert('Erro ao carregar categorias')
-    )
+  protected confirmationDelete(entry: Entry): string {
+    return `O lançamento ${entry.name} foi excluído com sucesso!`;
   }
 
-  delete(entry) {
-    const mustDelete = confirm(`Categoria ${entry.name}, deseja realmente excluir?`)
-
-    if (mustDelete) {
-      this.entryService.delete(entry.id).subscribe(
-        () => this.entries = this.entries.filter(element => element != entry),
-        () => alert("Erro ao excluir a categoria!")
-      )
-      this.toastr.info("Categoria excluida!")
-    }
+  protected questionDelete(entry: Entry): string {
+    return `Deseja realmente excuir o lancamento ${entry.name}?`;
   }
 
 }
